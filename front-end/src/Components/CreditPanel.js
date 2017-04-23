@@ -13,9 +13,13 @@ class CreditPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {clientToken:""}
+    let hostedFields
 
     this.setupBraintree = this.setupBraintree.bind(this);
-    this.clientDidCreate = this.clientDidCreate.bind(this);
+    this.clientDidCreate = this.clientDidCreate.bind(this);  
+    this.hostedFieldsDidCreate = this.hostedFieldsDidCreate.bind(this); 
+    this.donateClicked = this.donateClicked.bind(this)
+    this.nonceWasGenerated = this.nonceWasGenerated.bind(this);
   }
   
   setupBraintree(clientToken) {
@@ -34,6 +38,20 @@ class CreditPanel extends Component {
       .then((json)=>this.setupBraintree(json.clientToken))
       .catch(function() {
       });
+  }
+
+  nonceWasGenerated(tokenizeErr, payload) {
+    console.log("Nonce was gen'd")
+    console.log(payload.nonce)
+    console.log(this);
+
+    this.props.processDonation(payload.nonce)
+  }
+  
+  donateClicked(e) {
+    console.log("Here i am clicked")
+    console.log(this.hostedFields);
+    this.hostedFields.tokenize((tokenizeErr, payload)=>this.nonceWasGenerated(tokenizeErr, payload));
   }
 
   render() { 
@@ -74,7 +92,7 @@ class CreditPanel extends Component {
             </Col>
           </Row>
           <Row>
-          <Button bsClass={"btn btn-block btn-next"} onClick={(e) => this.nextClicked(e)}>
+          <Button bsClass={"btn btn-block btn-next"} onClick={(e) => this.donateClicked(e)}>
             {buttonText}
           </Button>
         </Row>
@@ -84,7 +102,7 @@ class CreditPanel extends Component {
   }
 
   hostedFieldsDidCreate(err, hostedFields) {
-    
+    this.hostedFields = hostedFields;
   }
   
   clientDidCreate(err, client) {

@@ -22,6 +22,7 @@ class App extends Component {
       donationStage:"amount",
       donationFrequency:"one-time",
       donationAmount:0,
+      donationNonce:'',
       donorInfo: {
         firstName:'',
         lastName:'',
@@ -29,7 +30,8 @@ class App extends Component {
         address:'',
         city:'',
         state:'',
-        zip:''
+        zip:'',
+        phone: ''
       }
     }
     
@@ -37,6 +39,7 @@ class App extends Component {
     this.updateAmount = this.updateAmount.bind(this);
     this.completeStage = this.completeStage.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.processDonation = this.processDonation.bind(this);
 
   }
 
@@ -49,6 +52,50 @@ class App extends Component {
     //ready for next pane
   }
 
+  serializeDonationData() {
+    return ({
+      "amount":this.state.donationAmount,
+      "frequency" : this.state.donationFrequency,
+      "donor_info": 
+        {
+          "first_name" : this.state.donorInfo.firstName, 
+          "last_name" : this.state.donorInfo.lastName, 
+          "email" : this.state.donorInfo.email, 
+          "phone" : this.state.donorInfo.phone, 
+          "address" : 
+          {
+            "street_address" : this.state.donorInfo.address, 
+            "city" : this.state.donorInfo.city, 
+            "state" : this.state.donorInfo.state,
+            "zip" : this.state.donorInfo.zip
+          }
+        }
+    })
+  } 
+
+  processDonation(nonce) {
+    this.setState({donationNonce:nonce})
+    const data = this.serializeDonationData();
+
+    console.log(JSON.stringify(data))
+
+    fetch('https://postman-echo.com/post', {
+	    method: 'post',
+      mode: 'no-cors',
+      headers: new Headers({
+		    'Content-Type': 'application/json'
+	    }),
+	    body: JSON.stringify(data)
+    })
+    .then(function(response) {
+        console.log(response.body);
+        //return response.json()
+      })
+      //.then((json)=>this.setupBraintree(json.clientToken))
+      .catch(function() {
+      });
+  }
+
   completeStage(stage) {
     let nextStage
     
@@ -58,6 +105,9 @@ class App extends Component {
         break;
       case 'info':
         nextStage = 'credit';
+        break;
+      case 'credit':
+        nextStage = 'thank-you';
         break;
 
     }
@@ -96,10 +146,7 @@ class App extends Component {
             donationStage={this.state.donationStage}
             donationFrequency={this.state.donationFrequency}
             donationAmount={this.state.donationAmount}
-            donorInfo={this.state.donorInfo}
-            updateAmount={this.updateAmount}
-            updateFrequency={this.updateFrequency}
-            handleChange={this.handleChange}
+            processDonation={this.processDonation}
             completeStage={this.completeStage}
           />
         </Panel>
