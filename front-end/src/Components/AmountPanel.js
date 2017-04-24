@@ -31,8 +31,14 @@ class AmountPanel extends Component {
   }
 
   nextClicked(e) {
-    this.props.updateAmount(this.state.otherDonationAmount);
-    this.props.completeStage("amount");
+    if(this.state.otherDonationAmount >= 10) {
+      this.props.updateAmount(this.state.otherDonationAmount);
+      this.props.completeStage("amount");
+    }
+    else {
+      this.setState({otherAmountHelpText:"Please enter an amount greater than $10."})
+    }
+    
 }
 
 
@@ -61,6 +67,7 @@ class AmountPanel extends Component {
                 id="otherAmount"
                 type="text"
                 placeholder="Other Amount"
+                help={this.state.otherAmountHelpText}
                 value={this.state.otherDonationAmount}
                 onChange={this.otherAmountChanged}
               />
