@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Well, Row, Button, Col, Panel, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
+import { Pager, ButtonToolbar, Well, Row, Button, Col, Panel, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome';
 import { FieldGroup, FieldGroupSelect } from './Helpers'
 import { isAlpha, isAscii, isEmpty, isEmail } from 'validator'
@@ -20,6 +20,7 @@ class InfoPanel extends Component {
     }
     this.onChange = this.onChange.bind(this);
     this.nextClicked = this.nextClicked.bind(this);
+    this.previousClicked = this.previousClicked.bind(this);
   }
   
   validateInputAndSet(validateFunction, testValue, helpName, helpText) {
@@ -50,6 +51,10 @@ class InfoPanel extends Component {
     if (!complete.includes(false)) {
       this.props.completeStage("info")
     }
+  }
+
+  previousClicked(e) {
+    this.props.previousStage("info");
   }
 
   onChange(e) {
@@ -157,9 +162,13 @@ class InfoPanel extends Component {
             </Col>
           </Row>
           <Row>
-            <Button bsClass={"btn btn-block btn-next"} onClick={(e) => this.nextClicked(e)}>
-              Next <FontAwesome name='arrow-right' size='2x' />
-            </Button>
+            <Col xs={10} xsOffset={1}>
+            <Pager>
+              <Pager.Item previous={true} onSelect={(e) => this.previousClicked(e)}><FontAwesome name='arrow-circle-left' size='1x'/> Previous</Pager.Item>
+                {' '}
+              <Pager.Item next={true} onSelect={(e) => this.nextClicked(e)}>Next <FontAwesome name='arrow-circle-right' size='1x'/></Pager.Item>
+            </Pager>
+            </Col>
           </Row>
         </form>
       </div>

@@ -39,6 +39,7 @@ class App extends Component {
     this.updateFrequency = this.updateFrequency.bind(this);
     this.updateAmount = this.updateAmount.bind(this);
     this.completeStage = this.completeStage.bind(this);
+    this.previousStage = this.previousStage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.processDonation = this.processDonation.bind(this);
     this.returnFromProcess = this.returnFromProcess.bind(this);
@@ -167,6 +168,21 @@ class App extends Component {
     this.setState({donationStage:nextStage})
   }
 
+  previousStage(stage) {
+    let previousStage
+
+    switch(stage) {
+      case 'info':
+        previousStage = 'amount';
+        break;
+      case 'credit':
+        previousStage = 'info';
+        break;
+    }
+
+    this.setState({donationStage:previousStage})
+  }
+
   handleChange(field, value) {
     let donorInfo = this.state.donorInfo;
     donorInfo[field] = value;
@@ -195,6 +211,7 @@ class App extends Component {
               updateFrequency={this.updateFrequency}
               handleChange={this.handleChange}
               completeStage={this.completeStage}
+              previousStage={this.previousStage}
             />
             <CreditPanel 
               donationStage={this.state.donationStage}
@@ -202,6 +219,7 @@ class App extends Component {
               donationAmount={this.state.donationAmount}
               processDonation={this.processDonation}
               completeStage={this.completeStage}
+              previousStage={this.previousStage}
             />
             <ThankYouPanel 
               donationStage={this.state.donationStage}
@@ -209,7 +227,6 @@ class App extends Component {
               donationAmount={this.state.donationAmount}
               transactionId={this.state.transactionId}
               subscriptionId={this.state.subscriptionId}
-              completeStage={this.completeStage}
             />
           </div>
         </Panel>

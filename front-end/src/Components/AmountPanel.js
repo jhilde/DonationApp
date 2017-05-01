@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Button, Col, Panel, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
+import { Pager, Row, Button, Col, Panel, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome';
 import { DonationAmountButton, FieldGroup, isCurrency } from './Helpers';
 //import { isCurrency } from 'validator';
@@ -93,10 +93,12 @@ class AmountPanel extends Component {
             </Col>
         </Row>
         <Row>
-          <Button bsClass={"btn btn-block btn-next"} onClick={(e) => this.nextClicked(e)}>
-            Next <FontAwesome name='arrow-right' size='2x'/>
-          </Button>
-        </Row>
+            <Col xs={10} xsOffset={1}>
+            <Pager>
+              <Pager.Item onSelect={(e) => this.nextClicked(e)}>Next <FontAwesome name='arrow-circle-right' size='1x'/></Pager.Item>
+            </Pager>
+            </Col>
+          </Row>
     </div>
     );
   }

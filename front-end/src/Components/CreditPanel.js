@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Button, Col, Panel, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
+import { Pager, Row, Button, Col, Panel, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap'
 import FontAwesome from 'react-fontawesome';
 import 'whatwg-fetch'
 import * as Braintree from 'braintree-web';
@@ -18,6 +18,7 @@ class CreditPanel extends Component {
     this.setupBraintree = this.setupBraintree.bind(this);
     this.clientDidCreate = this.clientDidCreate.bind(this);  
     this.hostedFieldsDidCreate = this.hostedFieldsDidCreate.bind(this); 
+    this.previousClicked = this.previousClicked.bind(this);
     this.donateClicked = this.donateClicked.bind(this)
     this.nonceWasGenerated = this.nonceWasGenerated.bind(this);
   }
@@ -52,6 +53,10 @@ class CreditPanel extends Component {
     this.props.processDonation(payload.nonce)
   }
   
+  previousClicked(e) {
+    this.props.previousStage("credit");
+  }
+
   donateClicked(e) {
     console.log("Here i am clicked")
     console.log(this.hostedFields);
@@ -97,10 +102,14 @@ class CreditPanel extends Component {
             </Col>
           </Row>
           <Row>
-          <Button bsClass={"btn btn-block btn-next"} onClick={(e) => this.donateClicked(e)}>
-            {buttonText}
-          </Button>
-        </Row>
+            <Col xs={10} xsOffset={1}>
+            <Pager>
+              <Pager.Item previous={true} onSelect={(e) => this.previousClicked(e)}><FontAwesome name='arrow-circle-left' size='lg'/> Previous</Pager.Item>
+                {' '}
+              <Pager.Item next={true} onSelect={(e) => this.donateClicked(e)}>{buttonText} <FontAwesome name='arrow-circle-right' size='lg'/></Pager.Item>
+            </Pager>
+            </Col>
+          </Row>
         </form>
       </div>
     )
