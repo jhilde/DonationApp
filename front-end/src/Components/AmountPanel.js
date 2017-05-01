@@ -10,13 +10,32 @@ import '../App.css';
 class AmountPanel extends Component {
   constructor(props) {
     super(props)
-    this.state = { otherDonationAmount: '' }
+
+    this.state = { 
+      otherDonationAmount: '',
+      buttonAmounts: this.setupButtonAmounts()
+    }
     
     this.otherAmountChanged = this.otherAmountChanged.bind(this)
+    this.frequencyClicked = this.frequencyClicked.bind(this)
+  }
+
+  setupButtonAmounts(which) {
+    const monthlyAmounts = [10,15,20,25,30,35,40]
+    const oneTimeAmounts = [10,25,50,100,150,200,500]
+
+    return which == 'monthly' ? monthlyAmounts : oneTimeAmounts
   }
 
   frequencyClicked(which, e) {
     this.props.updateFrequency(which);
+
+    this.setState({
+      buttonAmounts: this.setupButtonAmounts(which)
+    })
+
+    this.forceUpdate()
+
   }
 
   amountClicked(amount, e) {
@@ -51,17 +70,17 @@ class AmountPanel extends Component {
             <Button bsClass={this.props.donationFrequency === 'monthly' ? 'btn btn-link active' : 'btn btn-link'} onClick={(e) => this.frequencyClicked("monthly", e)}>Monthly</Button>
           </Row>
         <Row>
-            <DonationAmountButton amount={50} onClick={(e) => this.amountClicked(50,e)}/>
-            <DonationAmountButton amount={100} onClick={(e) => this.amountClicked(100,e)}/>
-            <DonationAmountButton amount={200} onClick={(e) => this.amountClicked(200,e)}/>
+            <DonationAmountButton amount={this.state.buttonAmounts[0]} onClick={(e) => this.amountClicked(this.state.buttonAmounts[0],e)}/>
+            <DonationAmountButton amount={this.state.buttonAmounts[1]} onClick={(e) => this.amountClicked(this.state.buttonAmounts[1],e)}/>
+            <DonationAmountButton amount={this.state.buttonAmounts[2]} onClick={(e) => this.amountClicked(this.state.buttonAmounts[2],e)}/>
         </Row>
         <Row>
-            <DonationAmountButton amount={500} onClick={(e) => this.amountClicked(500,e)}/>
-            <DonationAmountButton amount={1000} onClick={(e) => this.amountClicked(1000,e)}/>
-            <DonationAmountButton amount={2000} onClick={(e) => this.amountClicked(2000,e)}/>
+            <DonationAmountButton amount={this.state.buttonAmounts[3]} onClick={(e) => this.amountClicked(this.state.buttonAmounts[3],e)}/>
+            <DonationAmountButton amount={this.state.buttonAmounts[4]} onClick={(e) => this.amountClicked(this.state.buttonAmounts[4],e)}/>
+            <DonationAmountButton amount={this.state.buttonAmounts[5]} onClick={(e) => this.amountClicked(this.state.buttonAmounts[5],e)}/>
         </Row>
         <Row>
-            <DonationAmountButton amount={2500} onClick={(e) => this.amountClicked(2500,e)}/>
+            <DonationAmountButton amount={this.state.buttonAmounts[6]} onClick={(e) => this.amountClicked(this.state.buttonAmounts[6],e)}/>
             <Col xs={8}>
               <FieldGroup
                 id="otherAmount"

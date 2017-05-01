@@ -23,19 +23,23 @@ class CreditPanel extends Component {
   }
   
   setupBraintree(clientToken) {
+    console.log(clientToken);
     Braintree.client.create({
       authorization: clientToken
     }, this.clientDidCreate);
   }
   
   componentDidMount() {
-      const url = 'https://ka1l8dezi6.execute-api.us-east-1.amazonaws.com/test/clientToken'
-
-      fetch(url)
+      const url = 'https://plhky3gted.execute-api.us-east-1.amazonaws.com/dev/clientToken'
+      fetch(url, {
+        method: 'post'
+      })
       .then(function(response) {
+        console.log("BT: ");
+        //console.log(response);
         return response.json()
       })
-      .then((json)=>this.setupBraintree(json.clientToken))
+      .then((json)=>this.setupBraintree(json.btClientToken))
       .catch(function() {
       });
   }
@@ -52,7 +56,8 @@ class CreditPanel extends Component {
     console.log("Here i am clicked")
     console.log(this.hostedFields);
     this.hostedFields.tokenize((tokenizeErr, payload)=>this.nonceWasGenerated(tokenizeErr, payload));
-  }
+
+}
 
   render() { 
     const buttonTextEnd = this.props.donationFrequency === 'one-time' ? "today" : "each month"

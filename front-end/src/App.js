@@ -8,6 +8,7 @@ import './App.css';
 import AmountPanel from './Components/AmountPanel'
 import InfoPanel from './Components/InfoPanel'
 import CreditPanel from './Components/CreditPanel'
+import ThankYouPanel from './Components/ThankYouPanel'
 
 
 const panelTitle = (
@@ -40,6 +41,7 @@ class App extends Component {
     this.completeStage = this.completeStage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.processDonation = this.processDonation.bind(this);
+    this.returnFromProcess = this.returnFromProcess.bind(this);
 
   }
 
@@ -52,10 +54,13 @@ class App extends Component {
     //ready for next pane
   }
 
-  serializeDonationData() {
+  serializeDonationData() {  
     return ({
-      "amount":this.state.donationAmount,
-      "frequency" : this.state.donationFrequency,
+      "donation_info" : 
+      {
+        "amount":this.state.donationAmount,
+        "frequency" : this.state.donationFrequency
+      },
       "donor_info": 
         {
           "first_name" : this.state.donorInfo.firstName, 
@@ -69,9 +74,24 @@ class App extends Component {
             "state" : this.state.donorInfo.state,
             "zip" : this.state.donorInfo.zip
           }
-        }
+        },
+      "nonce" : this.state.donationNonce
     })
   } 
+
+  returnFromProcess(json) {
+    console.log(json);
+
+    if(json.success) {
+      this.setState({transactionId:json.transactionId})
+      this.setState({subscriptionId:json.subscriptionId})
+      this.completeStage('credit');
+    }
+    else {
+      console.log("No success??")
+      console.log(json)
+    }
+  }
 
   processDonation(nonce) {
     this.setState({donationNonce:nonce})
@@ -79,7 +99,26 @@ class App extends Component {
 
     console.log(JSON.stringify(data))
 
-    fetch('https://postman-echo.com/post', {
+    
+    const urlDonation = 'https://plhky3gted.execute-api.us-east-1.amazonaws.com/dev/Donate'
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");  
+      fetch(urlDonation, {
+        method: 'post',
+        headers: headers,
+        body: JSON.stringify(data)
+      })
+      .then(function(response) {
+        return response.json()
+      })
+      .then((json)=>this.returnFromProcess(json))
+      .catch(function(e) {
+        console.log("oh no!")
+        console.log(e);
+      });
+    
+    
+    /*fetch('https://6z4mdckfb2.execute-api.us-east-1.amazonaws.com/dev/donate_donate_mock', {
 	    method: 'post',
       mode: 'no-cors',
       headers: new Headers({
@@ -94,6 +133,20 @@ class App extends Component {
       //.then((json)=>this.setupBraintree(json.clientToken))
       .catch(function() {
       });
+
+      */
+
+//const url = 'https://ka1l8dezi6.execute-api.us-east-1.amazonaws.com/test/clientToken'
+
+     // const url = 'https://6z4mdckfb2.execute-api.us-east-1.amazonaws.com/dev/donate_donate_mock'
+
+//      fetch(url)
+  //    .then(function(response) {
+    //    return response.json()
+     // })
+      //.then((json)=>this.setupBraintree(json.clientToken))
+      //.catch(function() {
+      //});
   }
 
   completeStage(stage) {
@@ -124,31 +177,41 @@ class App extends Component {
     return (
       <Col xs={12} sm={12} md={5} mdOffset={7}>
         <Panel header={panelTitle}>
-          <AmountPanel 
-            donationStage={this.state.donationStage}
-            donationFrequency={this.state.donationFrequency}
-            donationAmount={this.state.donationAmount}
-            updateAmount={this.updateAmount}
-            updateFrequency={this.updateFrequency}
-            completeStage={this.completeStage}
-          />
-          <InfoPanel 
-            donationStage={this.state.donationStage}
-            donationFrequency={this.state.donationFrequency}
-            donationAmount={this.state.donationAmount}
-            donorInfo={this.state.donorInfo}
-            updateAmount={this.updateAmount}
-            updateFrequency={this.updateFrequency}
-            handleChange={this.handleChange}
-            completeStage={this.completeStage}
-          />
-          <CreditPanel 
-            donationStage={this.state.donationStage}
-            donationFrequency={this.state.donationFrequency}
-            donationAmount={this.state.donationAmount}
-            processDonation={this.processDonation}
-            completeStage={this.completeStage}
-          />
+          <div id={'outerDiv'}>
+            <AmountPanel 
+              donationStage={this.state.donationStage}
+              donationFrequency={this.state.donationFrequency}
+              donationAmount={this.state.donationAmount}
+              updateAmount={this.updateAmount}
+              updateFrequency={this.updateFrequency}
+              completeStage={this.completeStage}
+            />
+            <InfoPanel 
+              donationStage={this.state.donationStage}
+              donationFrequency={this.state.donationFrequency}
+              donationAmount={this.state.donationAmount}
+              donorInfo={this.state.donorInfo}
+              updateAmount={this.updateAmount}
+              updateFrequency={this.updateFrequency}
+              handleChange={this.handleChange}
+              completeStage={this.completeStage}
+            />
+            <CreditPanel 
+              donationStage={this.state.donationStage}
+              donationFrequency={this.state.donationFrequency}
+              donationAmount={this.state.donationAmount}
+              processDonation={this.processDonation}
+              completeStage={this.completeStage}
+            />
+            <ThankYouPanel 
+              donationStage={this.state.donationStage}
+              donationFrequency={this.state.donationFrequency}
+              donationAmount={this.state.donationAmount}
+              transactionId={this.state.transactionId}
+              subscriptionId={this.state.subscriptionId}
+              completeStage={this.completeStage}
+            />
+          </div>
         </Panel>
       </Col>
     );
