@@ -20,6 +20,16 @@ function FieldGroup({ id, label, help, ...props }) {
   );
 }
 
+function BTFieldGroup({ id, label, help, ...props }) {
+  return (
+    <FormGroup controlId={id}>
+      <ControlLabel>{label}</ControlLabel>
+      <div id={id} {...props} />
+      {help && <HelpBlock>{help}</HelpBlock>}
+    </FormGroup>
+  );
+}
+
 function FieldGroupSelect({id, label, help, options, ...props }) {
     return (
       <FormGroup controlId={id}>
@@ -47,4 +57,4 @@ function isCurrency(input) {
     return re.test(input)
 }
 
-export { DonationAmountButton, FieldGroup, FieldGroupSelect, isCurrency }
+export { DonationAmountButton, FieldGroup, FieldGroupSelect, BTFieldGroup, isCurrency }

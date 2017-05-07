@@ -173,6 +173,10 @@ body {
   color: purple;
 }
 
+.processor-error-mark {
+  color: red;
+}
+
 
 @media (min-width: 992px) {
   body {
