@@ -9,9 +9,15 @@ import AmountPanel from './Components/AmountPanel'
 import InfoPanel from './Components/InfoPanel'
 import CreditPanel from './Components/CreditPanel'
 import ThankYouPanel from './Components/ThankYouPanel'
+import Amplitude from 'react-amplitude';
 
 
-const panelTitle = (<h3> Bring Freedom This Summer</h3>)
+
+const panelTitle = (
+  <div>
+    <h3> Give Freedom Today </h3>
+  </div>
+  )
 
     class App extends Component {
 
@@ -42,7 +48,8 @@ const panelTitle = (<h3> Bring Freedom This Summer</h3>)
         this.nonceWasGenerated = this.nonceWasGenerated.bind(this);
         this.processDonation = this.processDonation.bind(this);
         this.returnFromProcess = this.returnFromProcess.bind(this);
-
+        
+        Amplitude.initialize('63a934cebf438af01699a011c184754a');
       }
 
       updateFrequency(frequency) {
@@ -83,11 +90,25 @@ const panelTitle = (<h3> Bring Freedom This Summer</h3>)
             subscriptionId: json.subscriptionId
           })
           this.completeStage('credit');
+          Amplitude.event('Completed Donation', {
+            transactionId: json.transactionId,
+            subscriptionId: json.subscriptionId,
+            amount: this.state.donationAmount,
+            frequency: this.state.donationFrequency
+          });
+
+          const revenue = new Amplitude.amplitude().Revenue();
+          revenue.setProductId(this.state.donationFrequency)
+          revenue.setPrice(this.state.donationAmount);
+          Amplitude.amplitude().logRevenueV2(revenue);
+          console.log(revenue);
+
         } else {
           this.setState({ 
             processorErrors: true, 
             processorErrorMessage: json.err.message
           })
+          Amplitude.event('BTError', {error:json.err.message});
         }
       }
 
@@ -97,7 +118,10 @@ const panelTitle = (<h3> Bring Freedom This Summer</h3>)
             processorErrors: true, 
             processorErrorMessage: 'Server error'
           })
+        Amplitude.event('BTError', {error:tokenizeErr});
+        
         }
+        
       else {
         this.processDonation(payload.nonce)
       }
@@ -119,8 +143,13 @@ const panelTitle = (<h3> Bring Freedom This Summer</h3>)
             return response.json()
           })
           .then((json) => this.returnFromProcess(json))
-          .catch(function(e) {
-            // What should we do here?
+          .catch((e) => function (){
+            this.setState({ 
+              processorErrors: true, 
+              processorErrorMessage: 'Server error'
+            })
+            Amplitude.event('BTError', {error:e});
+            
           });
       }
 
@@ -139,6 +168,8 @@ const panelTitle = (<h3> Bring Freedom This Summer</h3>)
             break;
 
         }
+
+        window.scrollTo(0,0);
         this.setState({ donationStage: nextStage })
       }
 
@@ -153,7 +184,7 @@ const panelTitle = (<h3> Bring Freedom This Summer</h3>)
             previousStage = 'info';
             break;
         }
-
+        window.scrollTo(0,0);
         this.setState({ donationStage: previousStage })
       }
 

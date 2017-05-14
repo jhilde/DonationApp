@@ -3,6 +3,7 @@ import { Pager, ButtonToolbar, Well, Row, Button, Col, Panel, FormGroup, Control
 import FontAwesome from 'react-fontawesome';
 import { FieldGroup, FieldGroupSelect } from './Helpers'
 import { isAlpha, isAscii, isEmpty, isEmail } from 'validator'
+import Amplitude from 'react-amplitude';
 import '../App.css';
 
 const states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
@@ -51,6 +52,10 @@ class InfoPanel extends Component {
 
     if (!complete.includes(false)) {
       this.props.completeStage("info")
+
+      Amplitude.setUserId(this.props.donorInfo.email);
+      Amplitude.event('Information Provided', {information:this.props.donorInfo});
+      
     }
   }
 

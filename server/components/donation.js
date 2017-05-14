@@ -14,17 +14,20 @@ const states = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA'
 
 
 function BraintreeGateway(envVars) {
-  const env = envVars.env === "production" ?
+  
+  const environment = envVars.environment == "production" ?
     braintree.Environment.Production :
     braintree.Environment.Sandbox;
 
-  return braintree.connect({
-    environment: env,
+  const gateway = braintree.connect({
+    environment: environment,
     merchantId: envVars.merchantId,
     publicKey: envVars.publicKey,
     privateKey: envVars.privateKey,
     merchantAccountId: envVars.merchantAccountId
   });
+
+  return gateway;
 }
 
 function isZip(value) {
@@ -189,10 +192,19 @@ function createErrorResponse(btError) {
   }
 };
 
+
+
+
 exports.btClientToken = (envVars, callback) => {
   const gateway = BraintreeGateway(envVars);
 
-  gateway.clientToken.generate({}, function(err, response) {
+  gateway.clientToken.generate({
+    
+  }, function(err, response) {
+    if(err) {
+      console.log(err);
+      return;
+    }
     const responseold = {
       statusCode: 200,
       headers: {

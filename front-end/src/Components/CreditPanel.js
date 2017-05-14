@@ -5,6 +5,7 @@ import { BTFieldGroup } from './Helpers'
 import 'whatwg-fetch'
 import * as Braintree from 'braintree-web';
 import logo from '../logo.svg';
+import Amplitude from 'react-amplitude';
 import '../App.css';
 
 
@@ -45,7 +46,8 @@ class CreditPanel extends Component {
         return response.json()
       })
       .then((json) => this.setupBraintree(json.btClientToken))
-      .catch(function() {
+      .catch(function(error) {
+        Amplitude.event('BT Error', {error:error});
         // What should we do here? Switch to a we're down screen?
       });
   }
@@ -83,6 +85,9 @@ class CreditPanel extends Component {
 
     if (!valid.includes(false)) {
       this.hostedFields.tokenize((tokenizeErr, payload) => this.props.nonceWasGenerated(tokenizeErr, payload));
+    }
+    else {
+      window.scrollTo(0,0);
     }
   }
 
