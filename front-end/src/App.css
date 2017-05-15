@@ -31,6 +31,8 @@ body {
     margin-bottom: 15px;
 }
 
+
+
 .form-title {
     font-weight: 700;
     line-height: 1.3;
@@ -152,6 +154,10 @@ body {
 .fixed-panel {
   height: 500;
   overflow-y: scroll;
+}
+
+.processing {
+  cursor: wait;
 }
 
 

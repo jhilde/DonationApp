@@ -49,7 +49,7 @@ const panelTitle = (
         this.processDonation = this.processDonation.bind(this);
         this.returnFromProcess = this.returnFromProcess.bind(this);
         
-        Amplitude.initialize('63a934cebf438af01699a011c184754a');
+        Amplitude.initialize('a55caf6e3734d1d0b9cc15e611a0a18b');
       }
 
       updateFrequency(frequency) {
