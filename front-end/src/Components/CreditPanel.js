@@ -154,11 +154,19 @@ class CreditPanel extends Component {
         <Row>
           <Col xs = { 10 } xsOffset = { 1 } >
             <Pager >
-              <Pager.Item previous = { true } onSelect = {(e) => this.previousClicked(e)}> 
+              <Pager.Item 
+                previous = { true } 
+                onSelect = {(e) => this.previousClicked(e)}
+                disabled = {this.props.processing}
+                > 
                 <FontAwesome name = 'arrow-circle-left' size = 'lg' />
                 Previous 
               </Pager.Item> { ' ' } 
-              <Pager.Item next = { true } onSelect = {(e) => this.donateClicked(e)}> 
+              <Pager.Item 
+                next = { true } 
+                onSelect = {(e) => this.donateClicked(e)}
+                disabled = {this.props.processing}
+                > 
                 { buttonText } 
                 < FontAwesome name = 'arrow-circle-right' size = 'lg' /> 
               </Pager.Item> 

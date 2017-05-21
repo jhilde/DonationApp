@@ -37,7 +37,8 @@ const panelTitle = (
             state: '',
             zip: '',
             phone: ''
-          }
+          },
+          processing: false
         }
 
         this.updateFrequency = this.updateFrequency.bind(this);
@@ -87,7 +88,8 @@ const panelTitle = (
         if (json.success) {
           this.setState({
             transactionId: json.transactionId,
-            subscriptionId: json.subscriptionId
+            subscriptionId: json.subscriptionId,
+            processing: false
           })
           this.completeStage('credit');
           Amplitude.event('Completed Donation', {
@@ -106,7 +108,8 @@ const panelTitle = (
         } else {
           this.setState({ 
             processorErrors: true, 
-            processorErrorMessage: json.err.message
+            processorErrorMessage: json.err.message,
+            processing:false
           })
           Amplitude.event('BTError', {error:json.err.message});
         }
@@ -128,7 +131,11 @@ const panelTitle = (
   }
       
       processDonation(nonce) {
-        this.setState({ donationNonce: nonce })
+        this.setState(
+          { 
+            donationNonce: nonce,
+            processing: true
+          })
         const data = this.serializeDonationData();
 
         const urlDonation = 'https://plhky3gted.execute-api.us-east-1.amazonaws.com/dev/Donate'
@@ -146,7 +153,8 @@ const panelTitle = (
           .catch((e) => function (){
             this.setState({ 
               processorErrors: true, 
-              processorErrorMessage: 'Server error'
+              processorErrorMessage: 'Server error',
+              processing: false
             })
             Amplitude.event('BTError', {error:e});
             
@@ -195,15 +203,12 @@ const panelTitle = (
       }
 
       render() {
-        return ( <
-          Col xs = { 12 }
-          sm = { 12 }
-          md = { 5 }
-          mdOffset = { 7 } >
-          <
-          Panel header = { panelTitle } >
-          <
-          div id = { 'outerDiv' } >
+        return ( 
+          <Col xs = { 12 } sm = { 12 } md = { 5 } mdOffset = { 7 } >
+            <Panel header = { panelTitle } >
+          < div 
+            id = { 'outerDiv' } 
+            className = {this.state.processing ? 'processing' : ''}>
           <
           AmountPanel donationStage = { this.state.donationStage }
           donationFrequency = { this.state.donationFrequency }
@@ -231,6 +236,7 @@ const panelTitle = (
           nonceWasGenerated = { this.nonceWasGenerated }
           processorErrors = { this.state.processorErrors }
           processorErrorMessage = { this.state.processorErrorMessage }
+          processing = {this.state.processing }
           /> <
           ThankYouPanel donationStage = { this.state.donationStage }
           donationFrequency = { this.state.donationFrequency }
