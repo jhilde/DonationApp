@@ -30,10 +30,18 @@ module.exports = function(grunt) {
         	clientToken: {
             	arn: 'arn:aws:lambda:us-east-1:669821887388:function:DonationApp_clientToken',
                 package: './dist/server_latest.zip',
+                options: {
+                    aliases: 'beta',
+                    enableVersioning: true
+                },
         	},
             donate: {
                 arn: 'arn:aws:lambda:us-east-1:669821887388:function:donationApp_donate',
-                package: './dist/server_latest.zip'
+                package: './dist/server_latest.zip',
+                options: {
+                    aliases: 'beta',
+                    enableVersioning: true
+                },
             }
         }
 	});
