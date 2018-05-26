@@ -68,6 +68,8 @@ class AmountPanel extends Component {
 
 
   render() {
+    if(this.props.donationStage !== 'amount') return null;
+    
     return ( 
       <div className = { this.props.donationStage === 'amount' ? '' : 'hidden' } >
         <Row>

@@ -1,21 +1,23 @@
 {
   "name": "front-end",
-  "homepage": "https://freedomconnexion.org/supportfreedom",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "braintree-web": "^3.15.0",
-    "prop-types": "^15.5.8",
-    "react": "^15.5.4",
+    "braintree-web": "^3.32.0",
+    "prop-types": "^15.6.1",
+    "react": "^15.6.2",
     "react-amplitude": "0.0.6",
     "react-bootstrap": "^0.30.9",
-    "react-dom": "^15.5.4",
+    "react-dom": "^15.6.2",
     "react-fontawesome": "^1.6.1",
     "react-prop-types": "^0.4.0",
-    "whatwg-fetch": "^2.0.3"
+    "whatwg-fetch": "^2.0.4",
+    "validator": "^9.4.1"
   },
   "devDependencies": {
-    "react-scripts": "0.9.5"
+    "react-scripts": "1.0.3"
+    
   },
   "scripts": {
     "start": "react-scripts start",

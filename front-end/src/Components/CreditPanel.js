@@ -95,6 +95,8 @@ class CreditPanel extends Component {
     const buttonTextEnd = this.props.donationFrequency === 'one-time' ? "today" : "each month"
     const buttonText = 'Donate $' + this.props.donationAmount + ' ' + buttonTextEnd
 
+    if(this.props.donationStage !== 'credit') return null;
+    
     return ( 
     
     <div className = { this.props.donationStage === 'credit' ? '' : 'hidden' } >

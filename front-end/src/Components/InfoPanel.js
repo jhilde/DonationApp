@@ -68,6 +68,9 @@ class InfoPanel extends Component {
   }
 
   render() {
+
+    if(this.props.donationStage !== 'info') return null;
+
     return ( <
       div className = { this.props.donationStage === 'info' ? '' : 'hidden' } >
       <

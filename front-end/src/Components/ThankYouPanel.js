@@ -11,6 +11,8 @@ class ThankYouPanel extends Component {
 
     const isMonthly = this.props.donationFrequency == 'monthly';
 
+    if(this.props.donationStage !== 'thank-you') return null;
+    
     return (
       <div className={this.props.donationStage === 'thank-you' ? '' : 'hidden'}>
         <Row>
